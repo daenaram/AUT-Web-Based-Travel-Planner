@@ -9,6 +9,7 @@
 <body>
     <h1>AUT Web-Based Travel Planner</h1>
     <h2>Create a New Account</h2>
+
     <form method="POST" action="../../assets/api/auth/signup.php">
         <br>
         <label for="username">Username:</label>
@@ -21,7 +22,22 @@
         <input type="password" id="password" name="password" required>
         <br>
         <button type="submit">Sign Up</button>
-        <button type="backButton" onclick="location.href='loginForm.html'">Already have an account? Login</button>
+        <button type="button" onclick="location.href='loginForm.html'">Already have an account? Login</button>
     </form>
+
+    <!-- Error Modal -->
+    <div id="error-modal" class="modal-overlay">
+        <div class="modal-box">
+            <h3>Email Already Registered</h3>
+            <p>
+                This email is already associated with an account.
+                Please use a different email or
+                <a href="loginForm.html">log in instead</a>.
+            </p>
+            <button class="modal-close-btn" onclick="closeModal()">OK</button>
+        </div>
+    </div>
+
+    <script src="../../assets/js/signup.js"></script>
 </body>
 </html>

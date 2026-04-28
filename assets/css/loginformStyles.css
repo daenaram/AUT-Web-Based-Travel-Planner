@@ -46,3 +46,60 @@ button[type="backButton"] {
     margin-left: 0.5rem;
 }
 a { display: inline-block; margin-top: 0.5rem; color: #0078d4; }
+/* Error Modal Overlay */
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 9999;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Modal Box */
+.modal-box {
+    background: white;
+    border-radius: 12px;
+    padding: 24px 32px;
+    max-width: 380px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.modal-box h3 {
+    color: #712B13;
+    margin-bottom: 12px;
+}
+
+.modal-box p {
+    color: #444;
+    margin-bottom: 20px;
+}
+
+.modal-box a {
+    color: #3C3489;
+    text-decoration: none;
+}
+
+.modal-box a:hover {
+    text-decoration: underline;
+}
+
+.modal-close-btn {
+    background: #2C2C2A;
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.modal-close-btn:hover {
+    background: #444441;
+}
