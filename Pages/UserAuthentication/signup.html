@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="../../assets/css/loginformStyles.css">
     <title>AUT Web-Based Travel Planner</title>
 </head>
 <body>
     <h1>AUT Web-Based Travel Planner</h1>
     <h2>Create a New Account</h2>
-    <form method="POST" action="signup.php">
+    <form method="POST" action="../../assets/api/auth/signup.php">
         <br>
         <label for="username">Username:</label>
         <input type="text" id="username" name="username" required>
@@ -20,6 +21,7 @@
         <input type="password" id="password" name="password" required>
         <br>
         <button type="submit">Sign Up</button>
+        <button type="backButton" onclick="location.href='loginForm.html'">Already have an account? Login</button>
     </form>
 </body>
 </html>
