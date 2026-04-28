@@ -1,0 +1,46 @@
+/* basic styles for the login form */
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f7f9fc;
+    color: #222;
+    margin: 2rem;
+}
+
+h1, h2 { text-align: center; }
+
+form {
+    max-width: 420px;
+    margin: 1rem auto;
+    padding: 1.25rem;
+    background: #fff;
+    border: 1px solid #e3e6ea;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+
+label { display: block; margin-top: 0.75rem; }
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 0.5rem;
+    margin-top: 0.25rem;
+    box-sizing: border-box;
+    border: 1px solid #cfd6dd;
+    border-radius: 4px;
+}
+
+button {
+    margin-top: 1rem;
+    padding: 0.5rem 0.9rem;
+    border: none;
+    border-radius: 4px;
+    background: #0078d4;
+    color: #fff;
+    cursor: pointer;
+}
+
+button[type="signup"] {
+    background: #6c757d;
+    margin-left: 0.5rem;
+}
+a { display: inline-block; margin-top: 0.5rem; color: #0078d4; }
