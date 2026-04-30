@@ -45,6 +45,44 @@ button[type="backButton"] {
     background: #6c757d;
     margin-left: 0.5rem;
 }
+
+.divider {
+    text-align: center;
+    margin: 15px 0 8px;
+    color: #6b7280;
+}
+
+.social_con {
+    display:flex;
+    gap: 12px;
+}
+
+.social_btn {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 13px;
+    margin-top: 12px;
+    background: white;
+    border: 1px solid #000000;
+    border-radius: 10px;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.social_btn img {
+    width: 22px;
+    margin-right: 10px;
+}
+
+.social_btn span {
+    color: black;
+    white-space: nowrap;
+}
+
+
 a { display: inline-block; margin-top: 0.5rem; color: #0078d4; }
 /* Error Modal Overlay */
 .modal-overlay {
