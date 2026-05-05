@@ -19,6 +19,8 @@ require_once __DIR__ . '/../../assets/api/config/database.php';
 $email    = isset($_POST['email'])    ? trim($_POST['email'])    : '';
 $password = isset($_POST['password']) ? $_POST['password']       : '';
 
+echo "The password entered was: " . htmlspecialchars($password); //debugging password 
+
 // Check if both email and password are provided
 if ($email === '' || $password === '') {
     header("Location: {$BASE_URL}/loginForm.html?error=all_fields_required");
