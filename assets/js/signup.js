@@ -11,6 +11,7 @@ document.getElementById('error-modal').addEventListener('click', function(e) {
 
 // Error messages configuration
 const errorMessages = {
+    'password_mismatch': { title: 'Password Mismatch', message: 'The passwords you entered do not match. Please try again.' },
     'email_taken': { title: 'Email Already Registered', message: 'This email is already associated with an account. Please use a different email or log in instead.' },
     'username_taken': { title: 'Username Already Taken', message: 'This username is already in use. Please choose a different one.' },
     'password_too_short': { title: 'Password Too Short', message: 'Your password must be at least 8 characters long.' },
