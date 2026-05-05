@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,48 +8,52 @@
     <script type="module" src="../UserAuthentication/loginForm.js"></script>
     <title>AUT Web-Based Travel Planner</title>
 </head>
+
 <body>
-  
-        <div class="logo_container">
-            <img src="https://www.freelogovectors.net/wp-content/uploads/2023/11/auckland-university-of-technology-logo-freelogovectors.net_.png" alt="Auckland University of Technology Logo (AUT)" class="logo">
-        </div>
+
+    <div class="logo_container">
+        <img src="https://www.freelogovectors.net/wp-content/uploads/2023/11/auckland-university-of-technology-logo-freelogovectors.net_.png"
+            alt="Auckland University of Technology Logo (AUT)" class="logo">
+    </div>
 
     <h1>AUT Web-Based Travel Planner</h1>
     <h2>Login to Your Account</h2>
     <form method="POST" action="login.php">
-    <br><label for="username">Username:</label>
-        <input type="text" id="username" name="username" required> 
-    <br>
+        <br><label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+        <br>
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required>
-    <br>
-    <a href="forgot_password.html">Forgot Password?</a>
-    <br>
-    <button type="submit">Login</button>
-    <button type="signup" formaction="signup.html" formnovalidate>Sign Up</button>
-    <br>
-    
-    <div class="divider">OR</div>
+        <br>
+        <a href="forgot_password.html">Forgot Password?</a>
+        <br>
+        <button type="submit">Login</button>
+        <button type="signup" formaction="signup.html" formnovalidate>Sign Up</button>
+        <br>
 
-    <div class="social_con">
-        <button type="button" class="social_btn" onclick="loginWithGoogle()">
-            <img src="https://www.svgrepo.com/show/475656/google-color.svg">
-            <span>Continue with Google</span>
+        <div class="divider">OR</div>
+
+        <!--Log in using Google, Apple (demo) and AUT (demo)-->
+        <div class="social_con">
+            <button type="button" class="social_btn" onclick="loginWithGoogle()">
+                <img src="https://www.svgrepo.com/show/475656/google-color.svg">
+                <span>Continue with Google</span>
+            </button>
+
+            <button type="button" class="social_btn" onclick="loginWithApple()">
+                <img src="https://www.svgrepo.com/show/69341/apple-logo.svg">
+                <span>Continue with Apple </span>
+            </button>
+        </div>
+        <button type="button" class="aut_btn" onclick="loginWithAUT()">
+            <img src="https://www.freelogovectors.net/wp-content/uploads/2023/11/auckland-university-of-technology-logo-freelogovectors.net_.png"
+                alt="Auckland University of Technology Logo (AUT)">
+            <span>Continue with AUT Login</span>
         </button>
-        <button type="button" class="social_btn" onclick="loginWithApple()">
-            <img src="https://www.svgrepo.com/show/69341/apple-logo.svg">
-            <span>Continue with Apple </span>
-        </button>
-    </div>
-    <button type="button" class="aut_btn" onclick="loginWithAUT()">
-        <img src="https://www.freelogovectors.net/wp-content/uploads/2023/11/auckland-university-of-technology-logo-freelogovectors.net_.png"
-            alt="Auckland University of Technology Logo (AUT)">
-        <span>Continue with AUT Login</span>
-    </button>
-    <p id="loginMessage" class="loginMessage"></p>
+        <p id="loginMessage" class="loginMessage"></p>
 
 
-</form>
+    </form>
 
 </body>
 

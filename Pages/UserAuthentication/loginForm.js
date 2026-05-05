@@ -1,3 +1,4 @@
+//Firebase used to connect Google log in
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import {
     getAuth,
@@ -76,7 +77,6 @@ window.loginWithAUT = function () {
         return;
     }
 
-    // OPTION A: simulate login
     showMessage("AUT login successful.");
     window.location.href = "../userDashboard/dashboard.html";
 };
