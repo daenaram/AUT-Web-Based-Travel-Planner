@@ -19,5 +19,6 @@ if (!isset($_SESSION['user_id'])) {
     <!-- Page heading for profile setup -->
     <h1>User Profile Set Up</h1>
     <!-- Add profile setup form and fields here -->
+    <a href = "/AUT-Web-Based-Travel-Planner/assets/api/auth/signout.php">Sign Out</a>
 </body>
 </html>
