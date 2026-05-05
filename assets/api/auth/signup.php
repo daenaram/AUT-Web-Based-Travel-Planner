@@ -2,7 +2,7 @@
 session_start();
 
 $BASE_URL      = '/AUT-Web-Based-Travel-Planner/Pages/UserAuthentication';
-$DASHBOARD_URL = '/AUT-Web-Based-Travel-Planner/Pages/userDashboard/Dashboard.html';
+$DASHBOARD_URL = '/AUT-Web-Based-Travel-Planner/Pages/userDashboard/userProfile.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     header("Location: {$BASE_URL}/signup.html");
@@ -15,9 +15,10 @@ require_once __DIR__ . '/../config/database.php';
 $username = isset($_POST['username']) ? trim($_POST['username']) : '';
 $email    = isset($_POST['email'])    ? trim($_POST['email'])    : '';
 $password = isset($_POST['password']) ? $_POST['password']       : '';
+$confirmPassword = isset($_POST['confirmPassword']) ? $_POST['confirmPassword'] : '';
 
 // Basic validation
-if ($username === '' || $email === '' || $password === '') {
+if ($email === '' || $password === '' || $confirmPassword === '') {
     header("Location: {$BASE_URL}/signup.html?error=all_fields_required");
     exit();
 }
@@ -43,13 +44,8 @@ try {
         exit();
     }
 
-    // Check username specifically
-    $stmtUser = $pdo->prepare("SELECT COUNT(*) FROM users WHERE username = ?");
-    $stmtUser->execute([$username]);
-    $usernameExists = (int) $stmtUser->fetchColumn();
-
-    if ($usernameExists > 0) {
-        header("Location: {$BASE_URL}/signup.html?error=username_taken");
+    if ($password !== $confirmPassword) {
+        header("Location: {$BASE_URL}/signup.html?error=password_mismatch");
         exit();
     }
 

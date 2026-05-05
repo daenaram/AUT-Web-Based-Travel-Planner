@@ -24,6 +24,9 @@ body {
 
 h1, h2 { text-align: center; }
 
+.note {
+    color: #d9534f;
+}
 form {
     max-width: 420px;
     margin: 1rem auto;
