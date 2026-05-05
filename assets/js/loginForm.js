@@ -3,7 +3,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/fireba
 import {
     getAuth,
     GoogleAuthProvider,
-    OAuthProvider,
     signInWithPopup
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 
@@ -25,23 +24,30 @@ function showMessage(message) {
     document.getElementById("loginMessage").textContent = message;
 }
 
-//Login for Google
+
+const dashboardPath = "../userDashboard/Dashboard.php";
+
+//Logging with Google using Firebase
 window.loginWithGoogle = function () {
     const provider = new GoogleAuthProvider();
 
     signInWithPopup(auth, provider)
         .then((result) => {
-            showMessage("Google login successful!");
             console.log(result.user);
-            window.location.href = "../userDashboard/dashboard.html";
+            showMessage("Google login successful!");
+            window.location.href = dashboardPath;
         })
         .catch((error) => {
-            console.log(error);
+            console.log(error.code);
+            console.log(error.message);
 
-            if (error.code === "Authentication popup closed by user" || error.code === "authentication popup request cancelled") {
+            if (
+                error.code === "auth/popup-closed-by-user" ||
+                error.code === "auth/cancelled-popup-request"
+            ) {
                 showMessage("Google login was cancelled. Please try again or use email and password.");
             }
-            else if (error.code === "Network request failed") {
+            else if (error.code === "auth/network-request-failed") {
                 showMessage("Google login is currently unavailable. Please try again later or use email and password.");
             }
             else {
@@ -50,27 +56,22 @@ window.loginWithGoogle = function () {
         });
 };
 
-
-//Login for Apple {demo}
+//Logging with Apple (demo)
 window.loginWithApple = function () {
-    const confirmLogin = confirm("Continue with Apple login demo version.");
+    const confirmLogin = confirm("Do you want to continue with Apple login demo?");
 
     if (!confirmLogin) {
-        showMessage("Apple login was cancelled. Try again with email and password");
+        showMessage("Apple login was cancelled. Please try again or use email and password.");
         return;
     }
-    try {
-        showMessage("Apple login successful (demo).");
-        window.location.href = "../userDashboard/dashboard.html";
-    } catch (error) {
-        showMessage("Apple login is currently unavailable. Please try again later or use email and password.");
-    }
+
+    showMessage("Apple login successful.");
+    window.location.href = dashboardPath;
 };
 
-
-//Login for AUT {demo}
+//Logging with AUT (demo)
 window.loginWithAUT = function () {
-    const confirmLogin = confirm("Do you want to continue with AUT login?");
+    const confirmLogin = confirm("Do you want to continue with AUT login demo?");
 
     if (!confirmLogin) {
         showMessage("AUT login was cancelled. Please try again or use email and password.");
@@ -78,5 +79,5 @@ window.loginWithAUT = function () {
     }
 
     showMessage("AUT login successful.");
-    window.location.href = "../userDashboard/dashboard.html";
+    window.location.href = dashboardPath;
 };
