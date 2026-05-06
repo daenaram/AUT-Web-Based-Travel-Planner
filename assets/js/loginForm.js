@@ -19,13 +19,43 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-//To show the message on the screen
+
+const dashboardPath = "/AUT-Web-Based-Travel-Planner/Pages/userDashboard/Dashboard.php";
+const sessionPath = "/AUT-Web-Based-Travel-Planner/assets/api/auth/firebaseSession.php";
+
+// Show message
 function showMessage(message) {
-    document.getElementById("loginMessage").textContent = message;
+    const el = document.getElementById("loginMessage");
+    if (el) el.textContent = message;
 }
 
+// Create PHP session (used by Apple & AUT)
+function createPhpSession(name, email) {
+    fetch(sessionPath, {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            name: name,
+            email: email
+        })
+    })
+        .then(response => response.text())
+        .then(data => {
+            console.log("Session response:", data);
 
-const dashboardPath = "../userDashboard/Dashboard.php";
+            if (data.trim() === "success") {
+                window.location.href = dashboardPath;
+            } else {
+                showMessage("Session could not be created: " + data);
+            }
+        })
+        .catch(error => {
+            console.log(error);
+            showMessage("Login session failed.");
+        });
+}
 
 //Logging with Google using Firebase
 window.loginWithGoogle = function () {
@@ -85,12 +115,14 @@ window.loginWithApple = function () {
     const confirmLogin = confirm("Do you want to continue with Apple login demo?");
 
     if (!confirmLogin) {
-        showMessage("Apple login was cancelled. Please try again or use email and password.");
+        showMessage("Apple login was cancelled.");
         return;
     }
 
     showMessage("Apple login successful.");
-    window.location.href = dashboardPath;
+
+    // IMPORTANT: create session first
+    createPhpSession("Apple User", "apple_user@icloud.com");
 };
 
 //Logging with AUT (demo)
@@ -98,10 +130,12 @@ window.loginWithAUT = function () {
     const confirmLogin = confirm("Do you want to continue with AUT login demo?");
 
     if (!confirmLogin) {
-        showMessage("AUT login was cancelled. Please try again or use email and password.");
+        showMessage("AUT login was cancelled.");
         return;
     }
 
     showMessage("AUT login successful.");
-    window.location.href = dashboardPath;
+
+    // IMPORTANT: create session first
+    createPhpSession("AUT Student", "student@aut.ac.nz");
 };
