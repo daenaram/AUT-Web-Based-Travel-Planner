@@ -28,31 +28,8 @@ function showMessage(message) {
 }
 
 
-function createPhpSession(name, email) {
-    fetch(firebaseSessionPath, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            name: name,
-            email: email
-        })
-    })
-        .then(response => response.text())
-        .then(data => {
-            if (data.trim() === "success") {
-                window.location.href = dashboardPath;
-            } else {
-                showMessage("Session could not be created. Please try again.");
-                console.log(data);
-            }
-        })
-        .catch(error => {
-            showMessage("Login session failed. Please try again.");
-            console.log(error);
-        });
-}
+const dashboardPath = "/AUT-Web-Based-Travel-Planner/Pages/userDashboard/Dashboard.php";
+// const sessionPath = "../../assets/api/auth/firebaseSession.php";
 
 // Google login
 window.loginWithGoogle = function () {
