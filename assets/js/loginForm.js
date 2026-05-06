@@ -1,10 +1,10 @@
-// Firebase used to connect Google login
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+//Firebase used to connect Google log in
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import {
     getAuth,
     GoogleAuthProvider,
     signInWithPopup
-} from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDuHGWuk28wzN3BagOE4Et8xOXaedU8x5o",
@@ -19,74 +19,68 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-const dashboardPath = "/AUT-Web-Based-Travel-Planner/Pages/userDashboard/Dashboard.php";
-const sessionPath = "/AUT-Web-Based-Travel-Planner/assets/api/auth/firebaseSession.php";
-
+//To show the message on the screen
 function showMessage(message) {
-    const loginMessage = document.getElementById("loginMessage");
-
-    if (loginMessage) {
-        loginMessage.textContent = message;
-    }
+    document.getElementById("loginMessage").textContent = message;
 }
 
-function createPhpSession(name, email) {
-    fetch(sessionPath, {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-            name: name,
-            email: email
-        })
-    })
-        .then(response => response.text())
-        .then(data => {
-            console.log("PHP session response:", data);
 
-            if (data.trim() === "success") {
-                window.location.href = dashboardPath;
-            } else {
-                showMessage("Session could not be created. Please try again.");
-            }
-        })
-        .catch(error => {
-            console.log("Session error:", error);
-            showMessage("Login session failed. Please try again.");
-        });
-}
+const dashboardPath = "../userDashboard/Dashboard.php";
 
-// Google login
+//Logging with Google using Firebase
 window.loginWithGoogle = function () {
     const provider = new GoogleAuthProvider();
 
     signInWithPopup(auth, provider)
         .then((result) => {
-            const user = result.user;
-
-            showMessage("Google login successful.");
-
-            createPhpSession(user.displayName, user.email);
+            showMessage("Authenticating with server...");
+            
+            // Get the ID token from Firebase
+            return result.user.getIdToken();
+        })
+        .then((idToken) => {
+            // Send token to backend to create PHP session
+            return fetch('/AUT-Web-Based-Travel-Planner/assets/api/auth/google-login.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ idToken: idToken })
+            });
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Server authentication failed');
+            }
+            return response.json();
+        })
+        .then((data) => {
+            if (data.success) {
+                showMessage("Google login successful!");
+                window.location.href = data.redirect;
+            } else {
+                showMessage("Google login failed: " + (data.error || "Unknown error"));
+            }
         })
         .catch((error) => {
-            console.log("Google error code:", error.code);
-            console.log("Google error message:", error.message);
+            console.log(error.code || error.message);
 
             if (
                 error.code === "auth/popup-closed-by-user" ||
                 error.code === "auth/cancelled-popup-request"
             ) {
                 showMessage("Google login was cancelled. Please try again or use email and password.");
-            } else if (error.code === "auth/network-request-failed") {
+            }
+            else if (error.code === "auth/network-request-failed") {
                 showMessage("Google login is currently unavailable. Please try again later or use email and password.");
-            } else {
+            }
+            else {
                 showMessage("Google login failed. Please try again later or use email and password.");
             }
         });
 };
 
-// Apple login demo
+//Logging with Apple (demo)
 window.loginWithApple = function () {
     const confirmLogin = confirm("Do you want to continue with Apple login demo?");
 
@@ -96,11 +90,10 @@ window.loginWithApple = function () {
     }
 
     showMessage("Apple login successful.");
-
-    createPhpSession("Apple User", "apple_user@icloud.com");
+    window.location.href = dashboardPath;
 };
 
-// AUT login demo
+//Logging with AUT (demo)
 window.loginWithAUT = function () {
     const confirmLogin = confirm("Do you want to continue with AUT login demo?");
 
@@ -110,6 +103,5 @@ window.loginWithAUT = function () {
     }
 
     showMessage("AUT login successful.");
-
-    createPhpSession("AUT Student", "student@aut.ac.nz");
+    window.location.href = dashboardPath;
 };

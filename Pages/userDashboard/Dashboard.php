@@ -19,7 +19,7 @@ if (!isset($_SESSION['user_id'])) {
 <body>
 
 <h1>CampusTrips</h1>
-<!--<h1>AUT Web-Based Travel Planner</h1>-->
+<h1>AUT Web-Based Travel Planner</h1>
 <?php if (isset($_SESSION['username'])): ?>
     <p>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</p>
 <?php endif; ?>
