@@ -1,4 +1,4 @@
-//Firebase used to connect Google log in
+// Firebase used to connect Google login
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-app.js";
 import {
     getAuth,
@@ -7,7 +7,7 @@ import {
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 
 const firebaseConfig = {
-    apiKey: "AIzaSyDuHGWuk28wzN3BagOE4Et8xOXaedU8x5o",
+    apiKey: "AIzaSyDuHGWuk28wzN3BagOE4Et8xOXaedU8x5oY",
     authDomain: "campus-trips.firebaseapp.com",
     projectId: "campus-trips",
     storageBucket: "campus-trips.firebasestorage.app",
@@ -19,7 +19,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-
 const dashboardPath = "../userDashboard/Dashboard.php";
 const firebaseSessionPath = "../../assets/api/auth/firebaseSession.php";
 
@@ -27,10 +26,10 @@ function showMessage(message) {
     document.getElementById("loginMessage").textContent = message;
 }
 
-
 function createPhpSession(name, email) {
     fetch(firebaseSessionPath, {
         method: "POST",
+        credentials: "same-origin",
         headers: {
             "Content-Type": "application/json"
         },
@@ -41,11 +40,12 @@ function createPhpSession(name, email) {
     })
         .then(response => response.text())
         .then(data => {
+            console.log("firebaseSession response:", data);
+
             if (data.trim() === "success") {
                 window.location.href = dashboardPath;
             } else {
-                showMessage("Session could not be created. Please try again.");
-                console.log(data);
+                showMessage("Session could not be created: " + data);
             }
         })
         .catch(error => {
@@ -66,13 +66,7 @@ window.loginWithGoogle = function () {
         .catch((error) => {
             console.log(error.code);
             console.log(error.message);
-            console.log(error.code);
-            console.log(error.message);
 
-            if (
-                error.code === "auth/popup-closed-by-user" ||
-                error.code === "auth/cancelled-popup-request"
-            ) {
             if (
                 error.code === "auth/popup-closed-by-user" ||
                 error.code === "auth/cancelled-popup-request"
@@ -101,7 +95,7 @@ window.loginWithApple = function () {
 // AUT login demo
 window.loginWithAUT = function () {
     const confirmLogin = confirm("Do you want to continue with AUT login demo?");
-    
+
     if (!confirmLogin) {
         showMessage("AUT login was cancelled. Please try again or use email and password.");
         return;
