@@ -18,20 +18,14 @@ if (!isset($_SESSION['user_id'])) {
 </head>
 <body>
 
-<<<<<<< Updated upstream
 <h1>CampusTrips</h1>
-=======
-<h1>AUT Web-Based Travel Planner</h1>
->>>>>>> Stashed changes
+<!--<h1>AUT Web-Based Travel Planner</h1>-->
 <?php if (isset($_SESSION['username'])): ?>
     <p>Welcome, <?php echo htmlspecialchars($_SESSION['username']); ?>!</p>
 <?php endif; ?>
 <p>Here you can manage your travel plans, view your itinerary, and access exclusive travel deals</p>
-<<<<<<< Updated upstream
 <a class="top-right-button" href="/AUT-Web-Based-Travel-Planner/assets/api/auth/signout.php">Sign Out</a>
-=======
     
 <p><a href="userProfile.php">View User Profile</a></p>
->>>>>>> Stashed changes
 </body>
 </html>
