@@ -33,13 +33,37 @@ window.loginWithGoogle = function () {
 
     signInWithPopup(auth, provider)
         .then((result) => {
-            console.log(result.user);
-            showMessage("Google login successful!");
-            window.location.href = dashboardPath;
+            showMessage("Authenticating with server...");
+            
+            // Get the ID token from Firebase
+            return result.user.getIdToken();
+        })
+        .then((idToken) => {
+            // Send token to backend to create PHP session
+            return fetch('/AUT-Web-Based-Travel-Planner/assets/api/auth/google-login.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ idToken: idToken })
+            });
+        })
+        .then((response) => {
+            if (!response.ok) {
+                throw new Error('Server authentication failed');
+            }
+            return response.json();
+        })
+        .then((data) => {
+            if (data.success) {
+                showMessage("Google login successful!");
+                window.location.href = data.redirect;
+            } else {
+                showMessage("Google login failed: " + (data.error || "Unknown error"));
+            }
         })
         .catch((error) => {
-            console.log(error.code);
-            console.log(error.message);
+            console.log(error.code || error.message);
 
             if (
                 error.code === "auth/popup-closed-by-user" ||
