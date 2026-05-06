@@ -26,6 +26,8 @@ h1, h2 { text-align: center; }
 
 .note {
     color: #d9534f;
+    text-align: center;
+    margin-bottom: 15px;
 }
 form {
     max-width: 420px;
@@ -184,4 +186,9 @@ a { display: inline-block; margin-top: 0.5rem; color: #0078d4; }
 
 .modal-close-btn:hover {
     background: #444441;
+}
+
+.back-link {
+    text-align: center;
+    margin-top: 15px;
 }

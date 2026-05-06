@@ -3,7 +3,6 @@ import { initializeApp } from "https://www.gstatic.com/firebasejs/12.12.1/fireba
 import {
     getAuth,
     GoogleAuthProvider,
-    OAuthProvider,
     signInWithPopup
 } from "https://www.gstatic.com/firebasejs/12.12.1/firebase-auth.js";
 
@@ -67,7 +66,13 @@ window.loginWithGoogle = function () {
         .catch((error) => {
             console.log(error.code);
             console.log(error.message);
+            console.log(error.code);
+            console.log(error.message);
 
+            if (
+                error.code === "auth/popup-closed-by-user" ||
+                error.code === "auth/cancelled-popup-request"
+            ) {
             if (
                 error.code === "auth/popup-closed-by-user" ||
                 error.code === "auth/cancelled-popup-request"
@@ -84,8 +89,10 @@ window.loginWithGoogle = function () {
 // Apple login demo
 window.loginWithApple = function () {
     const confirmLogin = confirm("Do you want to continue with Apple login demo?");
+    const confirmLogin = confirm("Do you want to continue with Apple login demo?");
 
     if (!confirmLogin) {
+        showMessage("Apple login was cancelled. Please try again or use email and password.");
         showMessage("Apple login was cancelled. Please try again or use email and password.");
         return;
     }
@@ -95,6 +102,7 @@ window.loginWithApple = function () {
 
 // AUT login demo
 window.loginWithAUT = function () {
+    const confirmLogin = confirm("Do you want to continue with AUT login demo?");
     const confirmLogin = confirm("Do you want to continue with AUT login demo?");
 
     if (!confirmLogin) {
