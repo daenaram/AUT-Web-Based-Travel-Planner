@@ -20,6 +20,10 @@ if (!isset($_SESSION['user_id'])) {
 
 <h1>CampusTrips</h1>
 <h1>AUT Web-Based Travel Planner</h1>
+<?php if (isset($_SESSION['name'])): ?>
+    <p>Welcome, <?php echo htmlspecialchars($_SESSION['name']); ?>!</p>
+<?php endif; ?>
+<p>Here you can manage your travel plans, view your itinerary, and access exclusive travel deals</p>
 
 <!-- Search bar prototype -->
 
@@ -57,13 +61,18 @@ if (!isset($_SESSION['user_id'])) {
 
 <!--  -->
 
-<?php if (isset($_SESSION['name'])): ?>
-    <p>Welcome, <?php echo htmlspecialchars($_SESSION['name']); ?>!</p>
-<?php endif; ?>
-<p>Here you can manage your travel plans, view your itinerary, and access exclusive travel deals</p>
-<a class="top-right-button" href="/AUT-Web-Based-Travel-Planner/assets/api/auth/signout.php">Sign Out</a>
-    
-<p><a href="userProfile.php">View User Profile</a></p>
+<!-- <a class="top-right-button" href="/AUT-Web-Based-Travel-Planner/assets/api/auth/signout.php">Sign Out</a>
+<p><a href="userProfile.php">View User Profile</a></p> -->
+
+<div class="top-right-actions">
+    <button class="profile-btn" onclick="location.href='userProfile.php'">
+        <div class="mini-avatar"></div>
+    </button>
+
+    <button class="signout-btn" onclick="location.href='/AUT-Web-Based-Travel-Planner/assets/api/auth/signout.php'">
+        Sign Out
+    </button>
+</div>
 
 <!-- Search function JS -->
  <script>
