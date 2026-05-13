@@ -48,7 +48,7 @@ try {
         $insertStmt->execute([$name, $email, $randomPassword]);
 
         $userId = $pdo->lastInsertId();
-        $name = $name;
+        
     } else {
         $userId = $user['id'];
         $name = $user['name'];
