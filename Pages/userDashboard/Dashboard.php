@@ -45,6 +45,7 @@ if (!isset($_SESSION['user_id'])) {
 
     <div id="accommodation" class="search-panel">
         <input type="text" placeholder="Search accommodation...">
+        <input type="text" placeholder="Accommodation type...">
         <button class="search-btn">Search</button>
     </div>
 

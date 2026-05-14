@@ -27,7 +27,13 @@
         <br>
         <label for="password">Password: <span class="note">*</span></label>
         <input type="password" id="password" name="password" required>
-        <br>
+        <ul class="password-requirements">
+                <li id="length">At least 8 characters</li>
+                <li id="uppercase">Contains an uppercase letter</li>
+                <li id="number">Contains a number</li>
+                <li id="symbol">Contains a symbol</li>
+            </ul>
+        
         <label for="confirmPassword">Confirm Password: <span class="note">*</span></label>
         <input type="password" id="confirmPassword" name="confirmPassword" required>
         <br>
@@ -49,5 +55,6 @@
     </div>
 
     <script src="../../assets/js/signup.js"></script>
+
 </body>
 </html>

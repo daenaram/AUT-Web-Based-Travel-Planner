@@ -32,3 +32,40 @@ function displayError(errorType) {
 // Check for error in URL and display
 const error = new URLSearchParams(window.location.search).get('error');
 if (error) displayError(error);
+
+const passwordInput = document.querySelector('input[name="password"]');
+
+const lengthReq = document.getElementById("length");
+const uppercaseReq = document.getElementById("uppercase");
+const numberReq = document.getElementById("number");
+const symbolReq = document.getElementById("symbol");
+
+if (passwordInput) {
+passwordInput.addEventListener("input", function () {
+    const value = passwordInput.value;
+
+    if (value.length >= 8) {
+        lengthReq.classList.add("valid");
+    } else {
+        lengthReq.classList.remove("valid");
+    }
+
+    if (/[A-Z]/.test(value)) {
+        uppercaseReq.classList.add("valid");
+    } else {
+        uppercaseReq.classList.remove("valid");
+    }
+
+    if (/\d/.test(value)) {
+        numberReq.classList.add("valid");
+    } else {
+        numberReq.classList.remove("valid");
+    }
+
+    if (/[\W_]/.test(value)) {
+        symbolReq.classList.add("valid");
+    } else {
+        symbolReq.classList.remove("valid");
+    }   
+})
+};
