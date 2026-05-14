@@ -48,7 +48,7 @@ try {
     }
 
     //check if account is locked
-    if(isAccountLocked($pdo, $email)) {
+    if($user['locked_out']) {
         header("Location: {$BASE_URL}/loginForm.html?error=account_locked");
         exit();
     }
@@ -58,14 +58,18 @@ try {
     if (!password_verify($password, $user['password'])) {
 
         // Record failed login attempt
-        recordFailedLogin($pdo, $email);
+        if (function_exists('recordFailedLogin')) {
+            recordFailedLogin($pdo, $email);
+        }
 
         header("Location: {$BASE_URL}/loginForm.html?error=invalid_credentials");
         exit();
     }
 
     // Reset failed login attempts on successful login
-    resetFailedLogins($pdo, $email);
+    if (function_exists('resetFailedLogin')) {
+        resetFailedLogin($pdo, $email);
+    }
 
     // Store user data in session
     $_SESSION['user_id']  = $user['id'];
