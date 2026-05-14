@@ -21,7 +21,7 @@ require_once __DIR__ .'/../../Pages/UserAuthentication/login_security.php';
 $email    = isset($_POST['email'])    ? trim($_POST['email'])    : '';
 $password = isset($_POST['password']) ? $_POST['password']       : '';
 
-echo "The password entered was: " . htmlspecialchars($password); //debugging password 
+//echo "The password entered was: " . htmlspecialchars($password); //debugging password 
 
 // Check if both email and password are provided
 if ($email === '' || $password === '') {
