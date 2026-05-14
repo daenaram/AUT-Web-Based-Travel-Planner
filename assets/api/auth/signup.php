@@ -28,10 +28,15 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
     exit();
 }
 
-if (!preg_match('/^(?=.[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$/', $password)) {
-    header("Location: {$BASE_URL}/signup.html?error=password_requirements");
+if (strlen($password) < 8) {
+    header("Location: {$BASE_URL}/signup.html?error=password_too_short");
     exit();
 }
+
+// if (!preg_match('/^(?=.[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}$/', $password)) {
+//     header("Location: {$BASE_URL}/signup.html?error=password_requirements");
+//     exit();
+// }
 
 try {
     // Check email specifically
