@@ -13,29 +13,28 @@ if (!$name || !$email) {
 
 try {
     // Check if this demo user already exists in the DB
-    $stmt = $pdo->prepare("SELECT id, username FROM users WHERE email = ?");
+    $stmt = $pdo->prepare("SELECT id, name FROM users WHERE email = ?");
     $stmt->execute([$email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$user) {
         // First time — insert a demo user row (no real password needed)
         $stmt = $pdo->prepare("
-            INSERT INTO users (username, email, password)
+            INSERT INTO users (name, email, password)
             VALUES (?, ?, ?)
         ");
         $dummyPassword = password_hash(bin2hex(random_bytes(16)), PASSWORD_DEFAULT);
         $stmt->execute([$name, $email, $dummyPassword]);
 
         $userId   = $pdo->lastInsertId();
-        $username = $name;
     } else {
         $userId   = $user['id'];
-        $username = $user['username'];
+        $name = $user['name'];
     }
 
     // Set the same session variables that login.php sets
     $_SESSION['user_id']  = $userId;
-    $_SESSION['username'] = $username;
+    $_SESSION['name'] = $name;
     $_SESSION['email']    = $email;
 
     echo "success";

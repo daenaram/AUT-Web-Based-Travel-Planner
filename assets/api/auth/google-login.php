@@ -34,29 +34,29 @@ try {
     $name = $payload['name'] ?? '';
 
     // Check if user exists
-    $stmt = $pdo->prepare("SELECT id, username FROM users WHERE email = ?");
+    $stmt = $pdo->prepare("SELECT id, name FROM users WHERE email = ?");
     $stmt->execute([$email]);
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
     if (!$user) {
         // Create new user if doesn't exist
-        $username = $name ?: explode('@', $email)[0];
+        $name = $name ?: explode('@', $email)[0];
         // Generate a random password for Google users (they don't use password login)
         $randomPassword = password_hash(bin2hex(random_bytes(32)), PASSWORD_DEFAULT);
 
-        $insertStmt = $pdo->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
-        $insertStmt->execute([$username, $email, $randomPassword]);
+        $insertStmt = $pdo->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
+        $insertStmt->execute([$name, $email, $randomPassword]);
 
         $userId = $pdo->lastInsertId();
-        $username = $username;
+        
     } else {
         $userId = $user['id'];
-        $username = $user['username'];
+        $name = $user['name'];
     }
 
     // Create session
     $_SESSION['user_id'] = $userId;
-    $_SESSION['username'] = $username;
+    $_SESSION['name'] = $name;
     $_SESSION['email'] = $email;
 
     echo json_encode(['success' => true, 'redirect' => '/AUT-Web-Based-Travel-Planner/Pages/userDashboard/Dashboard.php']);
