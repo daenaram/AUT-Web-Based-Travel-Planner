@@ -22,8 +22,12 @@ if (!isset($_SESSION['user_id'])) {
 
         <!-- Form to confirm account deletion -->
         <form method="POST" action="deleteAccountConfirm.php">
+            <input type="password" name="password" required placeholder="Enter your password to confirm">
+             <br>
             <button type="submit" name="confirm_delete">Delete My Account</button>
-            <a href="Dashboard.php"><button type="button">Cancel</button></a>
+            
+            <a href="Dashboard.php">
+            <button type="button">Cancel</button></a>
         </form>
     </body>         
 

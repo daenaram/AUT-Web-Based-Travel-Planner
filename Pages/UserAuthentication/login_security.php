@@ -55,7 +55,7 @@ function recordFailedLogin(PDO $pdo, string $email): void
     }
 }
 
-function resetFailedLogins(PDO $pdo, string $email): void
+function resetFailedLogin(PDO $pdo, string $email): void
 {
     $stmt = $pdo->prepare("
         UPDATE users
