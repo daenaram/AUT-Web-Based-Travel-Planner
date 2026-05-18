@@ -36,6 +36,12 @@ if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
 }
 
 try {
+    //check if user account is locked out before checking password
+    if (isAccountLocked($pdo, $email)) {
+        header("Location: {$BASE_URL}/loginForm.html?error=account_locked");
+        exit();
+    }
+
     // Query database for user by email
     $stmt = $pdo->prepare("SELECT id, name, password, failed_attempts, locked_out FROM users WHERE email = ?");
     $stmt->execute([$email]);
@@ -47,29 +53,24 @@ try {
         exit();
     }
 
-    //check if account is locked
-    if($user['locked_out']) {
-        header("Location: {$BASE_URL}/loginForm.html?error=account_locked");
-        exit();
-    }
-
-
-    // Verify password hash
+   
+    // Verify password
     if (!password_verify($password, $user['password'])) {
 
         // Record failed login attempt
-        if (function_exists('recordFailedLogin')) {
-            recordFailedLogin($pdo, $email);
-        }
+        recordFailedLogin($pdo, $email);
 
-        header("Location: {$BASE_URL}/loginForm.html?error=invalid_credentials");
+        if (isAccountLocked($pdo, $email)) {
+            header("Location: {$BASE_URL}/loginForm.html?error=account_locked");
+        } else {
+            header("Location: {$BASE_URL}/loginForm.html?error=invalid_credentials");
+        }
         exit();
     }
 
-    // Reset failed login attempts on successful login
-    if (function_exists('resetFailedLogin')) {
-        resetFailedLogin($pdo, $email);
-    }
+    //reset failed login attempts on successful login
+    resetFailedLogin($pdo, $email);
+    session_regenerate_id(true); // Regenerate session ID to prevent session fixation
 
     // Store user data in session
     $_SESSION['user_id']  = $user['id'];
