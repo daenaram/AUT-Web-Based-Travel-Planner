@@ -11,20 +11,34 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 //security check - whether the delete confirmation form was submitted and clicked on
-if($_SERVER['REQUEST_METHOD'] !== 'POST' || !isset($_POST['confirm_delete'])) {
+if($_SERVER['REQUEST_METHOD'] !== 'POST' ) { //|| !isset($_POST['confirm_delete'])
     header("Location: Dashboard.php");
     exit();
 }
 
 //get user's ID 
 $user_id = $_SESSION['user_id'];
+//$confirmInput = isset($_POST['confirmInput']) ? $_POST['confirmInput'] : '';
+
+/**echo '<pre>';
+print_r($_POST);
+echo '</pre>';
+exit();
+**/
+$confirmInput = trim($_POST['confirmInput'] ?? '');
+
+if($confirmInput !== 'DELETE') {
+    header("Location: deleteAccount.php?error=invalid_input");
+    exit();
+}
+
 try {
     //delete user account from database
     $sql = "DELETE FROM users WHERE id = :id";
 
     $stmt = $pdo->prepare($sql);
 
-    $stmt->execute([
+   $stmt->execute([
         ':id' => $user_id
     ]);
 
@@ -32,14 +46,29 @@ try {
     session_unset();
     session_destroy();
 
-    //redirect to login page after account deletion
-    header("Location: /AUT-Web-Based-Travel-Planner/Pages/UserAuthentication/loginForm.html?account_deleted=true");
+    echo "
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset='UTF-8'>
+        <title>Account Deleted</title>
+    </head>
+    <body>
+        <script>
+            alert('Your account has been successfully deleted.');
+            window.location.href = '/AUT-Web-Based-Travel-Planner/index.html';
+        </script>
+    </body>
+    </html>
+    ";
+
     exit();
 } catch (PDOException $e){
     /*
         If there is a database error,
         redirect back with an error message
     */
+    error_log("Account Deletion Failed for user ID {$user_id}: " . $e->getMessage());
     header("Location: deleteAccount.php?error=delete_failed");
 
     exit();

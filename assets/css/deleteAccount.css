@@ -1,0 +1,182 @@
+body {
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 16px;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #fff5f5, #f8fafc);
+}
+
+.warning {
+    width: 70px;
+    height: 70px;
+    background: #d1431f;
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 18px;
+    box-shadow: 0 12px 25px rgba(192, 57, 43, 0.3);
+}
+
+/* Main delete card */
+form {
+    width: 100%;
+    max-width: 440px;
+    background: #ffffff;
+    padding: 32px;
+    border-radius: 18px;
+    box-shadow: 0 18px 45px rgba(0, 0, 0, 0.12);
+    border-top: 6px solid #c0392b;
+}
+
+/* Page heading */
+h1 {
+    color: #c0392b;
+    font-size: 2rem;
+    margin-bottom: 10px;
+    text-align: center;
+}
+
+/* Warning text */
+p {
+    max-width: 440px;
+    text-align: center;
+    color: #555;
+    line-height: 1.6;
+}
+
+/* Label */
+label {
+    display: block;
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #333;
+}
+
+label span.keyword {
+    font-family: monospace;
+    background: #ffe8e5;
+    padding: 3px 8px;
+    border-radius: 6px;
+    color: #c0392b;
+    font-size: 1rem;
+}
+
+/* Input box */
+input[type="text"] {
+    width: 100%;
+    padding: 13px 14px;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    font-size: 1rem;
+    box-sizing: border-box;
+    margin-bottom: 8px;
+    letter-spacing: 0.08em;
+    transition: 0.2s ease;
+}
+
+input[type="text"]:focus {
+    outline: none;
+    border-color: #c0392b;
+    box-shadow: 0 0 0 4px rgba(192, 57, 43, 0.15);
+}
+
+/* Hint text */
+.hint {
+    font-size: 0.82rem;
+    color: #888;
+    margin-bottom: 22px;
+    text-align: left;
+}
+
+.button-group {
+    display: flex;
+    gap: 12px;
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* Buttons layout */
+.deleteBtn {
+    flex: 1;
+    height: 52px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+
+/* Delete button */
+.deleteBtn {
+    background: linear-gradient(135deg, #c0392b, #e74c3c);
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    transition: 0.2s ease;
+    margin-bottom: 12px;
+}
+
+.deleteBtn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+    background: #999;
+}
+
+.deleteBtn:not(:disabled):hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(192, 57, 43, 0.35);
+}
+
+/* Cancel button */
+.cancelBtn {
+    flex: 1;
+    height: 52px;
+    border-radius: 10px;
+    font-size: 1rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+    background: #f3f4f6;
+    color: #333;
+    border: 1px solid #ddd;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.cancelBtn:hover {
+    background: #e5e7eb;
+}
+
+/* Alert message */
+.alert {
+    width: 100%;
+    max-width: 440px;
+    padding: 12px 16px;
+    border-radius: 10px;
+    margin-bottom: 18px;
+    font-size: 0.92rem;
+    display: none;
+}
+
+.alert.error {
+    background: #fdecea;
+    color: #c0392b;
+    border: 1px solid #f5c6cb;
+}
+
+.alert.show {
+    display: block;
+}
