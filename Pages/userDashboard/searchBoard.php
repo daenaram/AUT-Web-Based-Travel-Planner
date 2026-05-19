@@ -57,33 +57,35 @@ if ($searchPerformed) {
     <title>Flight Search Results</title>
     <link rel="stylesheet" href="../../assets/css/settingsbutton.css">
     <link rel="stylesheet" href="../../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../../assets/css/searchBoard.css">
 </head>
 <body>
-    <h1>Flight Search</h1>
 
     <div class="search-container">
         <div class="search-tabs">
-            <button class="tab-btn active" onclick="showSearchTab('flights', this)">Flights</button>
-            <button class="tab-btn" onclick="showSearchTab('accommodation', this)">Accommodation</button>
+            <button class="tab-btn <?php echo $activeTab === 'flights' ? 'active' : ''; ?>" onclick="showSearchTab('flights', this)">Flights</button>
+            <button class="tab-btn <?php echo $activeTab === 'accommodation' ? 'active' : ''; ?>" onclick="showSearchTab('accommodation', this)">Accommodation</button>
             <button class="tab-btn" onclick="showSearchTab('budget', this)">Budget</button>
             <button class="tab-btn" onclick="showSearchTab('itinerary', this)">Itinerary Building</button>
         </div>
-        <form id="flight-search-form" method="POST" action="/AUT-Web-Based-Travel-Planner/Pages/userDashboard/searchBoard.php">
-        <div id="flights" class="search-panel active-panel">    
-                <input type="text" name="departure_city" placeholder="Starting Location..." value="<?php echo htmlspecialchars($flightSearch['departure_city']); ?>">
-                <input type="text" name="arrival_city" placeholder="Destination..." value="<?php echo htmlspecialchars($flightSearch['arrival_city']); ?>">
-                <input type="date" name="departure_date" value="<?php echo htmlspecialchars($flightSearch['departure_date']); ?>">
-                <input type="date" name="return_date" value="<?php echo htmlspecialchars($flightSearch['return_date']); ?>">
-                <button type="submit" class="search-btn">Search</button>
-                <button type="button" class="search-btn" onclick="location.href='Dashboard.php'">Back to Dashboard</button>  
-        </div>
+
+        <form method="POST" action="/AUT-Web-Based-Travel-Planner/Pages/userDashboard/searchBoard.php" class="search-panel <?php echo $activeTab === 'flights' ? 'active-panel' : ''; ?>" id="flights">
+            <input type="hidden" name="search_type" value="flights">
+            <input type="text" name="departure_city" placeholder="Starting Location..." value="<?php echo htmlspecialchars($flightSearch['departure_city']); ?>">
+            <input type="text" name="arrival_city" placeholder="Destination..." value="<?php echo htmlspecialchars($flightSearch['arrival_city']); ?>">
+            <input type="date" name="departure_date" value="<?php echo htmlspecialchars($flightSearch['departure_date']); ?>">
+            <input type="date" name="return_date" value="<?php echo htmlspecialchars($flightSearch['return_date']); ?>">
+            <button type="submit" class="search-btn">Search</button>
+            <button type="button" class="search-btn" onclick="location.href='Dashboard.php'">Back to Dashboard</button>
         </form>
 
-        <div id="accommodation" class="search-panel">   
-            <input type="text" placeholder="Search accommodation...">
-            <input type="text" placeholder="Accommodation type...">
-            <button class="search-btn">Search</button>
-        </div>
+        <form method="POST" action="/AUT-Web-Based-Travel-Planner/Pages/userDashboard/searchBoard.php" class="search-panel <?php echo $activeTab === 'accommodation' ? 'active-panel' : ''; ?>" id="accommodation">
+            <input type="hidden" name="search_type" value="accommodation">
+            <input type="text" name="accommodation_name" placeholder="Search accommodation..." value="<?php echo htmlspecialchars($hotelSearch['accommodation_name']); ?>">
+            <input type="text" name="accommodation_type" placeholder="Accommodation type..." value="<?php echo htmlspecialchars($hotelSearch['accommodation_type']); ?>">
+            <input type="text" name="accommodation_city" placeholder="City..." value="<?php echo htmlspecialchars($hotelSearch['accommodation_city']); ?>">
+            <button type="submit" class="search-btn">Search</button>
+        </form>
 
         <div id="budget" class="search-panel">
             <input type="text" placeholder="Search budget...">
@@ -98,43 +100,109 @@ if ($searchPerformed) {
 
     <div class="search-results">
         <h2>Search Results</h2>
-        <?php if (count($flights) === 0): ?>
-            <p>No flights found for the selected criteria.</p>
-        <?php else: ?>
-            <table class="flight-results-table">
-                <thead>
-                    <tr>
-                        <div>
-                        <th>Airline</th>
-                        <th>Flight #</th>
-                        <th>From</th>
-                        <th>To</th>
-                        <th>Departure</th>
-                        <th>Arrival</th>
-                        <th>Duration</th>
-                        <th>Stops</th>
-                        <th>Class</th>
-                        <th>Price (NZD)</th>
+        <?php if ($activeTab === 'accommodation'): ?>
+            <?php if (count($accommodations) === 0): ?>
+                <p>No accommodations found for the selected criteria.</p>
+            <?php else: ?>
+                <div class="accommodation-results-container">
+                    <?php foreach ($accommodations as $acc): ?>
+                        <div class="accommodation-result-card">
+                            <div class="accommodation-card-header">
+                                <div class="accommodation-info">
+                                    <h3><?php echo htmlspecialchars($acc['name']); ?></h3>
+                                    <div class="accommodation-type-location">
+                                        <span class="accommodation-type"><?php echo htmlspecialchars($acc['type']); ?></span>
+                                        <span class="accommodation-location"><?php echo htmlspecialchars($acc['city']); ?>, <?php echo htmlspecialchars($acc['country']); ?></span>
+                                    </div>
+                                </div>
+                                <div class="accommodation-rating">
+                                    <span class="rating-badge">★ <?php echo htmlspecialchars($acc['rating']); ?></span>
+                                </div>
+                            </div>
+                            
+                            <div class="accommodation-card-body">
+                                <div class="amenities-section">
+                                    <p class="amenities-label">Amenities:</p>
+                                    <p class="amenities-text"><?php echo htmlspecialchars(substr($acc['amenities'], 0, 80)); ?>...</p>
+                                </div>
+                                <div class="accommodation-address">
+                                    <span class="label">Address:</span> <?php echo htmlspecialchars($acc['address']); ?>
+                                </div>
+                            </div>
+                            
+                            <div class="accommodation-card-footer">
+                                <div class="check-times">
+                                    <div class="check-time">
+                                        <span class="label">Check-in</span>
+                                        <span class="time"><?php echo htmlspecialchars($acc['check_in_time']); ?></span>
+                                    </div>
+                                    <div class="check-time">
+                                        <span class="label">Check-out</span>
+                                        <span class="time"><?php echo htmlspecialchars($acc['check_out_time']); ?></span>
+                                    </div>
+                                </div>
+                                <div class="price-section">
+                                    <div class="price-per-night">
+                                        <span class="label">per night</span>
+                                        <span class="amount">NZD <?php echo htmlspecialchars(number_format($acc['price_per_night_nzd'], 0)); ?></span>
+                                    </div>
+                                    <button class="add-btn">Add Now</button>
+                                </div>
+                            </div>
                         </div>
-                    </tr>
-                </thead>
-                <tbody>
-                    <?php foreach ($flights as $flight): ?>
-                        <tr>
-                            <td><?php echo htmlspecialchars($flight['airline']); ?></td>
-                            <td><?php echo htmlspecialchars($flight['flight_number']); ?></td>
-                            <td><?php echo htmlspecialchars($flight['departure_city']); ?> (<?php echo htmlspecialchars($flight['departure_airport']); ?>)</td>
-                            <td><?php echo htmlspecialchars($flight['arrival_city']); ?> (<?php echo htmlspecialchars($flight['arrival_airport']); ?>)</td>
-                            <td><?php echo htmlspecialchars($flight['departure_datetime']); ?></td>
-                            <td><?php echo htmlspecialchars($flight['arrival_datetime']); ?></td>
-                            <td><?php echo htmlspecialchars($flight['duration_minutes']); ?> min</td>
-                            <td><?php echo htmlspecialchars($flight['stops']); ?></td>
-                            <td><?php echo htmlspecialchars($flight['cabin_class']); ?></td>
-                            <td><?php echo htmlspecialchars(number_format($flight['price_nzd'], 2)); ?></td>
-                        </tr>
                     <?php endforeach; ?>
-                </tbody>
-            </table>
+                </div>
+            <?php endif; ?>
+        <?php else: ?>
+            <?php if (count($flights) === 0): ?>
+                <p>No flights found for the selected criteria.</p>
+            <?php else: ?>
+                <div class="flight-results-container">
+                    <?php foreach ($flights as $flight): ?>
+                        <div class="flight-result-card">
+                            <div class="flight-card-left">
+                                <div class="flight-airline">
+                                    <strong><?php echo htmlspecialchars($flight['airline']); ?></strong>
+                                    <span><?php echo htmlspecialchars($flight['flight_number']); ?></span>
+                                </div>
+                                <div class="flight-time-location">
+                                    <div class="time"><?php echo substr($flight['departure_datetime'], 11, 5); ?></div>
+                                    <div class="location"><?php echo htmlspecialchars($flight['departure_city']); ?> (<?php echo htmlspecialchars($flight['departure_airport']); ?>)</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flight-card-middle">
+                                <div class="duration-info">
+                                    <span class="duration"><?php 
+                                        $hours = floor($flight['duration_minutes'] / 60);
+                                        $mins = $flight['duration_minutes'] % 60;
+                                        echo $hours . 'h ' . $mins . 'm';
+                                    ?></span>
+                                </div>
+                                <div class="stops-info">
+                                    <?php echo $flight['stops'] == 0 ? 'Direct' : $flight['stops'] . ' stop' . ($flight['stops'] > 1 ? 's' : ''); ?>
+                                </div>
+                            </div>
+                            
+                            <div class="flight-card-right">
+                                <div class="flight-time-location">
+                                    <div class="time"><?php echo substr($flight['arrival_datetime'], 11, 5); ?></div>
+                                    <div class="location"><?php echo htmlspecialchars($flight['arrival_city']); ?> (<?php echo htmlspecialchars($flight['arrival_airport']); ?>)</div>
+                                </div>
+                            </div>
+                            
+                            <div class="flight-card-price">
+                                <div class="cabin-class">Economy</div>
+                                <div class="price-tag">
+                                    <span class="currency">NZD</span>
+                                    <span class="amount"><?php echo htmlspecialchars(number_format($flight['price_nzd'], 0)); ?></span>
+                                </div>
+                                <button class="add-btn">Add Now</button>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
         <?php endif; ?>
     </div>
 

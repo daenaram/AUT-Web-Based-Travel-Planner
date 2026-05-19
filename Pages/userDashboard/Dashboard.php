@@ -93,21 +93,22 @@ try {
         <button class="tab-btn" onclick="showSearchTab('itinerary', this)">Itinerary Building</button>
     </div>
 
-    <form id="flight-search-form" method="POST" action="/AUT-Web-Based-Travel-Planner/Pages/userDashboard/searchBoard.php">
-        <div id="flights" class="search-panel active-panel">
-                <input type="text" name="departure_city" placeholder="Starting Location...">
-                <input type="text" name="arrival_city" placeholder="Destination...">
-                <input type="date" name="departure_date">
-                <input type="date" name="return_date">
-                <button type="submit" class="search-btn">Search</button>
-        </div>
+    <form method="POST" action="/AUT-Web-Based-Travel-Planner/Pages/userDashboard/searchBoard.php" class="search-panel active-panel" id="flights">
+        <input type="hidden" name="search_type" value="flights">
+        <input type="text" name="departure_city" placeholder="Starting Location...">
+        <input type="text" name="arrival_city" placeholder="Destination...">
+        <input type="date" name="departure_date">
+        <input type="date" name="return_date">
+        <button type="submit" class="search-btn">Search</button>
     </form>
 
-    <div id="accommodation" class="search-panel">
-        <input type="text" placeholder="Search accommodation...">
-        <input type="text" placeholder="Accommodation type...">
-        <button class="search-btn">Search</button>
-    </div>
+    <form method="POST" action="/AUT-Web-Based-Travel-Planner/Pages/userDashboard/searchBoard.php" class="search-panel" id="accommodation">
+        <input type="hidden" name="search_type" value="accommodation">
+        <input type="text" name="accommodation_name" placeholder="Search accommodation...">
+        <input type="text" name="accommodation_type" placeholder="Accommodation type...">
+        <input type="text" name="accommodation_city" placeholder="City...">
+        <button type="submit" class="search-btn">Search</button>
+    </form>
 
     <div id="budget" class="search-panel">
         <input type="text" placeholder="Search budget...">

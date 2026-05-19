@@ -213,13 +213,3 @@ body {
     text-align: center;
     min-height: 120px;
 }
-.search-results{
-    max-width: 90%;
-    min-height: fit-content;
-    margin: 1rem auto;
-    padding: 1rem;
-    background: #fff;
-    border: 1px solid #e3e6ea;
-    border-radius: 8px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
-}
