@@ -8,46 +8,45 @@ if (!isset($_SESSION['user_id'])) {
 }
 
 require_once __DIR__ . '/../../assets/api/config/database.php';
+require_once __DIR__ . '/../../assets/api/dashboard/searchflights.php';
+require_once __DIR__ . '/../../assets/api/dashboard/searchHotel.php';
 
-$departureCity = trim($_POST['departure_city'] ?? '');
-$arrivalCity   = trim($_POST['arrival_city'] ?? '');
-$departureDate = trim($_POST['departure_date'] ?? '');
-$returnDate    = trim($_POST['return_date'] ?? '');
+$searchType = $_POST['search_type'] ?? 'flights';
+$activeTab = $searchType === 'accommodation' ? 'accommodation' : 'flights';
+$searchPerformed = $_SERVER['REQUEST_METHOD'] === 'POST';
 
-$query = 'SELECT * FROM flights';
-$conditions = [];
-$params = [];
+$flightSearch = [
+    'departure_city' => '',
+    'arrival_city' => '',
+    'departure_date' => '',
+    'return_date' => '',
+];
 
-if ($departureCity !== '') {
-    $conditions[] = 'departure_city LIKE :departure_city';
-    $params[':departure_city'] = "%$departureCity%";
+$hotelSearch = [
+    'accommodation_name' => '',
+    'accommodation_type' => '',
+    'accommodation_city' => '',
+];
+
+$flights = [];
+$accommodations = [];
+
+if ($searchPerformed) {
+    if ($searchType === 'accommodation') {
+        $hotelSearch['accommodation_name'] = trim($_POST['accommodation_name'] ?? '');
+        $hotelSearch['accommodation_type'] = trim($_POST['accommodation_type'] ?? '');
+        $hotelSearch['accommodation_city'] = trim($_POST['accommodation_city'] ?? '');
+        $accommodations = searchAccommodations($pdo, $hotelSearch);
+    } else {
+        $flightSearch['departure_city'] = trim($_POST['departure_city'] ?? '');
+        $flightSearch['arrival_city'] = trim($_POST['arrival_city'] ?? '');
+        $flightSearch['departure_date'] = trim($_POST['departure_date'] ?? '');
+        $flightSearch['return_date'] = trim($_POST['return_date'] ?? '');
+        $flights = searchFlights($pdo, $flightSearch);
+    }
+} else {
+    $flights = searchFlights($pdo, $flightSearch);
 }
-
-if ($arrivalCity !== '') {
-    $conditions[] = 'arrival_city LIKE :arrival_city';
-    $params[':arrival_city'] = "%$arrivalCity%";
-}
-
-if ($departureDate !== '' && $returnDate !== '') {
-    $conditions[] = 'DATE(departure_datetime) BETWEEN :departure_date AND :return_date';
-    $params[':departure_date'] = $departureDate;
-    $params[':return_date'] = $returnDate;
-} elseif ($departureDate !== '') {
-    $conditions[] = 'DATE(departure_datetime) = :departure_date';
-    $params[':departure_date'] = $departureDate;
-} elseif ($returnDate !== '') {
-    $conditions[] = 'DATE(departure_datetime) = :return_date';
-    $params[':return_date'] = $returnDate;
-}
-
-if (count($conditions) > 0) {
-    $query .= ' WHERE ' . implode(' AND ', $conditions);
-}
-
-$query .= ' ORDER BY departure_datetime ASC';
-$stmt = $pdo->prepare($query);
-$stmt->execute($params);
-$flights = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
 <!DOCTYPE html>
@@ -69,19 +68,18 @@ $flights = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <button class="tab-btn" onclick="showSearchTab('budget', this)">Budget</button>
             <button class="tab-btn" onclick="showSearchTab('itinerary', this)">Itinerary Building</button>
         </div>
-
-        <div id="flights" class="search-panel active-panel">
-            <form id="flight-search-form" method="POST" action="/AUT-Web-Based-Travel-Planner/Pages/userDashboard/searchBoard.php">
-                <input type="text" name="departure_city" placeholder="Starting Location..." value="<?php echo htmlspecialchars($departureCity); ?>">
-                <input type="text" name="arrival_city" placeholder="Destination..." value="<?php echo htmlspecialchars($arrivalCity); ?>">
-                <input type="date" name="departure_date" value="<?php echo htmlspecialchars($departureDate); ?>">
-                <input type="date" name="return_date" value="<?php echo htmlspecialchars($returnDate); ?>">
+        <form id="flight-search-form" method="POST" action="/AUT-Web-Based-Travel-Planner/Pages/userDashboard/searchBoard.php">
+        <div id="flights" class="search-panel active-panel">    
+                <input type="text" name="departure_city" placeholder="Starting Location..." value="<?php echo htmlspecialchars($flightSearch['departure_city']); ?>">
+                <input type="text" name="arrival_city" placeholder="Destination..." value="<?php echo htmlspecialchars($flightSearch['arrival_city']); ?>">
+                <input type="date" name="departure_date" value="<?php echo htmlspecialchars($flightSearch['departure_date']); ?>">
+                <input type="date" name="return_date" value="<?php echo htmlspecialchars($flightSearch['return_date']); ?>">
                 <button type="submit" class="search-btn">Search</button>
-                <button type="button" class="search-btn" onclick="location.href='Dashboard.php'">Back to Dashboard</button>
-            </form>
+                <button type="button" class="search-btn" onclick="location.href='Dashboard.php'">Back to Dashboard</button>  
         </div>
+        </form>
 
-        <div id="accommodation" class="search-panel">
+        <div id="accommodation" class="search-panel">   
             <input type="text" placeholder="Search accommodation...">
             <input type="text" placeholder="Accommodation type...">
             <button class="search-btn">Search</button>
@@ -106,6 +104,7 @@ $flights = $stmt->fetchAll(PDO::FETCH_ASSOC);
             <table class="flight-results-table">
                 <thead>
                     <tr>
+                        <div>
                         <th>Airline</th>
                         <th>Flight #</th>
                         <th>From</th>
@@ -116,6 +115,7 @@ $flights = $stmt->fetchAll(PDO::FETCH_ASSOC);
                         <th>Stops</th>
                         <th>Class</th>
                         <th>Price (NZD)</th>
+                        </div>
                     </tr>
                 </thead>
                 <tbody>

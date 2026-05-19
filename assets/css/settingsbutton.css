@@ -118,8 +118,9 @@
     background: #0078d4;
     color: #fff;
     border: none;
-    padding: 0 18px;
+    padding: 0px 18px;
     cursor: pointer;
+    margin: 1%;
 }
 
 .search-btn hover {
