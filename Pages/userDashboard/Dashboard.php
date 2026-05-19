@@ -15,6 +15,7 @@ if (!isset($_SESSION['user_id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Dashboard</title>
     <link rel="stylesheet" href="../../assets/css/settingsbutton.css">
+    <link rel="stylesheet" href="../../assets/css/dashboard.css">
 </head>
 <body>
 
@@ -36,11 +37,14 @@ if (!isset($_SESSION['user_id'])) {
     </div>
 
     <div id="flights" class="search-panel active-panel">
-        <input type="text" placeholder="Starting Location...">
-        <input type="text" placeholder="Destination...">
-        <input type="date">
-        <input type="date">
-        <button class="search-btn">Search</button>
+        <form id="flight-search-form" method="POST" action="/AUT-Web-Based-Travel-Planner/Pages/userDashboard/searchBoard.php">
+            <input type="text" name="departure_city" placeholder="Starting Location...">
+            <input type="text" name="arrival_city" placeholder="Destination...">
+            <input type="date" name="departure_date">
+            <input type="date" name="return_date">
+            <button type="submit" class="search-btn">Search</button>
+        </form>
+        
     </div>
 
     <div id="accommodation" class="search-panel">
@@ -94,5 +98,25 @@ if (!isset($_SESSION['user_id'])) {
     }
  </script>
 <!--  -->
+ <div class="savedTrips">
+    <h2>Your Saved Trips</h2>
+    <p>View and manage your saved trips here.</p>
+    
+    <!-- Placeholder for saved trips list -->
+     <div class="saved-trip-list">
+             <ul>
+        <li>Trip to Paris - <a href="#">View Details</a></li>
+        <li>Weekend in Auckland - <a href="#">View Details</a></li>
+        <li>Business Trip to Sydney - <a href="#">View Details</a></li>
+    </ul>
+    </div>
+    <div class="saved-trip-list">
+             <ul>
+        <li>Trip to Paris - <a href="#">View Details</a></li>
+        <li>Weekend in Auckland - <a href="#">View Details</a></li>
+        <li>Business Trip to Sydney - <a href="#">View Details</a></li>
+    </ul>
+    </div>
+</div>
 </body>
 </html>
