@@ -18,6 +18,7 @@ $query = 'SELECT * FROM flights';
 $conditions = [];
 $params = [];
 
+// Build dynamic query based on provided search parameters
 if ($departureCity !== '') {
     $conditions[] = 'departure_city LIKE :departure_city';
     $params[':departure_city'] = "%$departureCity%";
@@ -40,10 +41,12 @@ if ($departureDate !== '' && $returnDate !== '') {
     $params[':return_date'] = $returnDate;
 }
 
+// Append conditions to query if any were added
 if (count($conditions) > 0) {
     $query .= ' WHERE ' . implode(' AND ', $conditions);
 }
 
+// Order results by departure date/time
 $query .= ' ORDER BY departure_datetime ASC';
 $stmt = $pdo->prepare($query);
 $stmt->execute($params);
@@ -82,9 +85,20 @@ $flights = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
 
         <div id="accommodation" class="search-panel">
-            <input type="text" placeholder="Search accommodation...">
-            <input type="text" placeholder="Accommodation type...">
-            <button class="search-btn">Search</button>
+            <form id="accommodation-search-form" method="POST" action="/AUT-Web-Based-Travel-Planner/Pages/userDashboard/search/accomodationSearch.php">
+                <input type="text" name="name" placeholder="Accommodation name...">
+                <input type="text" name="type" placeholder="Accommodation type...">
+                <input type="text" name="city" placeholder="City...">
+                <input type="text" name="country" placeholder="Country...">
+                <input type="text" name="address" placeholder="Address...">
+                <input type="time" name="check_in_time" placeholder="Check-in time...">
+                <input type="time" name="check_out_time" placeholder="Check-out time...">
+                <input type="number" name="price_per_night_nzd" placeholder="Max price per night (NZD)..." min="0" step="0.01">
+                <input type="number" name="rating" placeholder="Minimum rating..." min="0" max="5" step="0.1">
+                <input type="text" name="amenities" placeholder="Amenities...">
+                <button type="submit" class="search-btn">Search</button>
+                <button type="button" class="search-btn" onclick="location.href='Dashboard.php'">Back to Dashboard</button>
+            </form>
         </div>
 
         <div id="budget" class="search-panel">
@@ -150,5 +164,6 @@ $flights = $stmt->fetchAll(PDO::FETCH_ASSOC);
             clickedButton.classList.add('active');
         }
     </script>
+    <script src="../../assets/js/accomodationSearch.js"></script>
 </body>
 </html>
