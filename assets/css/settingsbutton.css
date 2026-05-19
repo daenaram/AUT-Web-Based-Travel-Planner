@@ -125,3 +125,17 @@
 .search-btn hover {
     background: #005ea6;
 }
+.search-panel form {
+    display: flex;
+    flex: 1;
+    width: 100%;
+}
+
+.search-panel form input {
+    flex: 1;
+    border: none;
+    border-right: 1px solid #cfd6dd;
+    padding: 0.65rem;
+    outline: none;
+    font-size: 14px;
+}
