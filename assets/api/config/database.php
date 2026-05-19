@@ -124,9 +124,22 @@ try {
         FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
         FOREIGN KEY (trip_id) REFERENCES trips(id) ON DELETE CASCADE
     )");
-
+    $pdo->exec("CREATE TABLE IF NOT EXISTS activities (
+        id                 INT AUTO_INCREMENT PRIMARY KEY,
+        activity_name      VARCHAR(150)  NOT NULL,
+        city               VARCHAR(100)  NOT NULL,
+        country            VARCHAR(100)  NOT NULL,
+        category           VARCHAR(50)   NOT NULL,
+        activity_date      DATE          NOT NULL,
+        activity_time      TIME          NOT NULL,
+        cost_nzd          DECIMAL(10,2) NOT NULL,
+        rating            DECIMAL(2,1),
+        description       TEXT,
+        created_at        TIMESTAMP     DEFAULT CURRENT_TIMESTAMP
+    )");
     // Seed dummy data quietly after table creation
     require_once __DIR__ . '/dummyData.php';
+    require_once __DIR__ . '/activitiesData.php';
 
 } catch (PDOException $e) {
     error_log("Database setup error: " . $e->getMessage());
