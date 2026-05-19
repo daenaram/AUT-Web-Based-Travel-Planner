@@ -218,5 +218,6 @@ if ($searchPerformed) {
             clickedButton.classList.add('active');
         }
     </script>
+    <script src="../../assets/js/accomodationSearch.js"></script>
 </body>
 </html>
