@@ -89,6 +89,7 @@ try {
     <div class="search-tabs">
         <button class="tab-btn active" onclick="showSearchTab('flights', this)">Flights</button>
         <button class="tab-btn" onclick="showSearchTab('accommodation', this)">Accommodation</button>
+        <button class="tab-btn" onclick="showSearchTab('activities', this)">Activities</button>
         <button class="tab-btn" onclick="showSearchTab('budget', this)">Budget</button>
         <button class="tab-btn" onclick="showSearchTab('itinerary', this)">Itinerary Building</button>
     </div>
@@ -107,6 +108,15 @@ try {
         <input type="text" name="accommodation_name" placeholder="Search accommodation...">
         <input type="text" name="accommodation_type" placeholder="Accommodation type...">
         <input type="text" name="accommodation_city" placeholder="City...">
+        <button type="submit" class="search-btn">Search</button>
+    </form>
+
+    <form method="POST" action="/AUT-Web-Based-Travel-Planner/Pages/userDashboard/searchBoard.php" class="search-panel" id="activities">
+        <input type="hidden" name="search_type" value="activities">
+        <input type="text" name="keyword" placeholder="Search activities...">
+        <input type="text" name="city" placeholder="City/Country">
+        <input type="text" name="category" placeholder="Category">
+        <input type="date" name="activity_date">
         <button type="submit" class="search-btn">Search</button>
     </form>
 
