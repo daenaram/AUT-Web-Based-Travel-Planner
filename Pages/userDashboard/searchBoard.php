@@ -7,14 +7,18 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Include necessary files for database connection and search functions
 require_once __DIR__ . '/../../assets/api/config/database.php';
 require_once __DIR__ . '/../../assets/api/dashboard/searchflights.php';
 require_once __DIR__ . '/../../assets/api/dashboard/searchHotel.php';
+require_once __DIR__ . '/../../assets/api/dashboard/searchActivities.php';
 
+// Determine which search type is being performed (flights, accommodation, or activities)
 $searchType = $_POST['search_type'] ?? 'flights';
-$activeTab = $searchType === 'accommodation' ? 'accommodation' : 'flights';
+$activeTab = in_array($searchType, ['accommodation', 'activities'], true) ? $searchType : 'flights';
 $searchPerformed = $_SERVER['REQUEST_METHOD'] === 'POST';
 
+// Initialize search parameters with empty values
 $flightSearch = [
     'departure_city' => '',
     'arrival_city' => '',
@@ -22,21 +26,38 @@ $flightSearch = [
     'return_date' => '',
 ];
 
+// Accommodation search parameters
 $hotelSearch = [
     'accommodation_name' => '',
     'accommodation_type' => '',
     'accommodation_city' => '',
 ];
 
+// Activity search parameters
+$activitySearch = [
+    'keyword' => '',
+    'city' => '',
+    'category' => '',
+    'activity_date' => '',
+];
+
 $flights = [];
 $accommodations = [];
+$activities = [];
 
+// Perform the appropriate search based on the submitted form data
 if ($searchPerformed) {
     if ($searchType === 'accommodation') {
         $hotelSearch['accommodation_name'] = trim($_POST['accommodation_name'] ?? '');
         $hotelSearch['accommodation_type'] = trim($_POST['accommodation_type'] ?? '');
         $hotelSearch['accommodation_city'] = trim($_POST['accommodation_city'] ?? '');
         $accommodations = searchAccommodations($pdo, $hotelSearch);
+    } elseif ($searchType === 'activities') {
+        $activitySearch['keyword'] = trim($_POST['keyword'] ?? '');
+        $activitySearch['city'] = trim($_POST['city'] ?? '');
+        $activitySearch['category'] = trim($_POST['category'] ?? '');
+        $activitySearch['activity_date'] = trim($_POST['activity_date'] ?? '');
+        $activities = searchActivities($pdo, $activitySearch);
     } else {
         $flightSearch['departure_city'] = trim($_POST['departure_city'] ?? '');
         $flightSearch['arrival_city'] = trim($_POST['arrival_city'] ?? '');
@@ -49,6 +70,7 @@ if ($searchPerformed) {
 }
 ?>
 
+<!-- The HTML structure for the search board page, including tabs for different search types and displaying results -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -60,15 +82,17 @@ if ($searchPerformed) {
     <link rel="stylesheet" href="../../assets/css/searchBoard.css">
 </head>
 <body>
-
+    <!-- Page heading for profile setup -->
     <div class="search-container">
         <div class="search-tabs">
             <button class="tab-btn <?php echo $activeTab === 'flights' ? 'active' : ''; ?>" onclick="showSearchTab('flights', this)">Flights</button>
             <button class="tab-btn <?php echo $activeTab === 'accommodation' ? 'active' : ''; ?>" onclick="showSearchTab('accommodation', this)">Accommodation</button>
+            <button class="tab-btn <?php echo $activeTab === 'activities' ? 'active' : ''; ?>" onclick="showSearchTab('activities', this)">Activities</button>
             <button class="tab-btn" onclick="showSearchTab('budget', this)">Budget</button>
             <button class="tab-btn" onclick="showSearchTab('itinerary', this)">Itinerary Building</button>
         </div>
 
+        <!-- Flight Search Form -->
         <form method="POST" action="/AUT-Web-Based-Travel-Planner/Pages/userDashboard/searchBoard.php" class="search-panel <?php echo $activeTab === 'flights' ? 'active-panel' : ''; ?>" id="flights">
             <input type="hidden" name="search_type" value="flights">
             <input type="text" name="departure_city" placeholder="Starting Location..." value="<?php echo htmlspecialchars($flightSearch['departure_city']); ?>">
@@ -79,11 +103,22 @@ if ($searchPerformed) {
             <button type="button" class="search-btn" onclick="location.href='Dashboard.php'">Back to Dashboard</button>
         </form>
 
+        <!-- Accommodation search form with additional fields for city and type -->
         <form method="POST" action="/AUT-Web-Based-Travel-Planner/Pages/userDashboard/searchBoard.php" class="search-panel <?php echo $activeTab === 'accommodation' ? 'active-panel' : ''; ?>" id="accommodation">
             <input type="hidden" name="search_type" value="accommodation">
             <input type="text" name="accommodation_name" placeholder="Search accommodation..." value="<?php echo htmlspecialchars($hotelSearch['accommodation_name']); ?>">
             <input type="text" name="accommodation_type" placeholder="Accommodation type..." value="<?php echo htmlspecialchars($hotelSearch['accommodation_type']); ?>">
             <input type="text" name="accommodation_city" placeholder="City..." value="<?php echo htmlspecialchars($hotelSearch['accommodation_city']); ?>">
+            <button type="submit" class="search-btn">Search</button>
+        </form>
+
+        <!-- Activity search form -->
+        <form method="POST" action="/AUT-Web-Based-Travel-Planner/Pages/userDashboard/searchBoard.php" class="search-panel <?php echo $activeTab === 'activities' ? 'active-panel' : ''; ?>" id="activities">
+            <input type="hidden" name="search_type" value="activities">
+            <input type="text" name="keyword" placeholder="Search activities..." value="<?php echo htmlspecialchars($activitySearch['keyword']); ?>">
+            <input type="text" name="city" placeholder="City/Country" value="<?php echo htmlspecialchars($activitySearch['city']); ?>">
+            <input type="text" name="category" placeholder="Category" value="<?php echo htmlspecialchars($activitySearch['category']); ?>">
+            <input type="date" name="activity_date" value="<?php echo htmlspecialchars($activitySearch['activity_date']); ?>">
             <button type="submit" class="search-btn">Search</button>
         </form>
 
@@ -98,6 +133,7 @@ if ($searchPerformed) {
         </div>
     </div>
 
+    <!-- Search results section -->
     <div class="search-results">
         <h2>Search Results</h2>
         <?php if ($activeTab === 'accommodation'): ?>
@@ -153,6 +189,48 @@ if ($searchPerformed) {
                     <?php endforeach; ?>
                 </div>
             <?php endif; ?>
+        <?php elseif ($activeTab === 'activities'): ?>
+            <?php if (count($activities) === 0): ?>
+                <p>No activities found for the selected criteria.</p>
+            <?php else: ?>
+                <div class="activity-results-container">
+                    <?php foreach ($activities as $activity): ?>
+                        <div class="activity-result-card">
+                            <div class="activity-card-header">
+                                <div class="activity-info">
+                                    <h3><?php echo htmlspecialchars($activity['activity_name']); ?></h3>
+                                    <span class="activity-category"><?php echo htmlspecialchars($activity['category']); ?></span>
+                                </div>
+                                <div class="activity-rating">
+                                    <span class="rating-badge">★ <?php echo htmlspecialchars($activity['rating']); ?></span>
+                                </div>
+                            </div>
+                            <div class="activity-card-body">
+                                <div class="activity-location">
+                                    <?php echo htmlspecialchars($activity['city']); ?>, <?php echo htmlspecialchars($activity['country']); ?>
+                                </div>
+                                <div class="activity-details">
+                                    <span><strong>Date:</strong> <?php echo htmlspecialchars($activity['activity_date']); ?></span>
+                                    <span><strong>Time:</strong> <?php echo htmlspecialchars(substr($activity['activity_time'], 0, 5)); ?></span>
+                                </div>
+                                <p class="activity-description">
+                                <?php echo htmlspecialchars($activity['description']); ?>
+                                </p>
+                            </div>
+                            <div class="activity-card-footer">
+                            <div class="activity-price">
+                                <span class="label">Price</span>
+                                <span class="amount">
+                                    NZD <?php echo htmlspecialchars(number_format($activity['cost_nzd'], 0)); ?>
+                                </span>
+                            </div>
+
+                            <button class="add-btn">Add to Plan</button>
+                        </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>  
+            <?php endif; ?>
         <?php else: ?>
             <?php if (count($flights) === 0): ?>
                 <p>No flights found for the selected criteria.</p>
@@ -206,6 +284,8 @@ if ($searchPerformed) {
         <?php endif; ?>
     </div>
 
+    <!-- move to js file 
+    JavaScript function to handle tab switching -->
     <script>
         function showSearchTab(tabId, clickedButton) {
             const panels = document.querySelectorAll('.search-panel');
@@ -218,6 +298,5 @@ if ($searchPerformed) {
             clickedButton.classList.add('active');
         }
     </script>
-    <script src="../../assets/js/accomodationSearch.js"></script>
 </body>
 </html>
